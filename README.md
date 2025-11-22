@@ -74,13 +74,13 @@ docker build -t myapp:latest .
 
 k8s/configmap.yaml
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  APP_ENV: "production"
-  APP_MESSAGE: "Hello from Kubernetes!"
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: app-config
+    data:
+      APP_ENV: "production"
+      APP_MESSAGE: "Hello from Kubernetes!"
 
 
 Apply:
@@ -89,35 +89,35 @@ kubectl apply -f k8s/configmap.yaml
 
 2. Deployment
 
-k8s/deployment.yaml
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp-deployment
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-        - name: myapp
-          image: myapp:latest
-          ports:
-            - containerPort: 5000
-          envFrom:
-            - configMapRef:
-                name: app-config
-          resources:
-            requests:
-              cpu: "100m"
-            limits:
-              cpu: "300m"
+        k8s/deployment.yaml
+        
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: myapp-deployment
+        spec:
+          replicas: 2
+          selector:
+            matchLabels:
+              app: myapp
+          template:
+            metadata:
+              labels:
+                app: myapp
+            spec:
+              containers:
+                - name: myapp
+                  image: myapp:latest
+                  ports:
+                    - containerPort: 5000
+                  envFrom:
+                    - configMapRef:
+                        name: app-config
+                  resources:
+                    requests:
+                      cpu: "100m"
+                    limits:
+                      cpu: "300m"
 
 
 Apply:
@@ -126,20 +126,20 @@ kubectl apply -f k8s/deployment.yaml
 
 3. Service
 
-k8s/service.yaml
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: myapp-service
-spec:
-  type: NodePort
-  selector:
-    app: myapp
-  ports:
-    - port: 5000
-      targetPort: 5000
-      nodePort: 30007
+        k8s/service.yaml
+        
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: myapp-service
+        spec:
+          type: NodePort
+          selector:
+            app: myapp
+          ports:
+            - port: 5000
+              targetPort: 5000
+              nodePort: 30007
 
 
 Apply:
@@ -160,24 +160,24 @@ minikube addons enable metrics-server
 
 k8s/hpa.yaml
 
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: myapp-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: myapp-deployment
-  minReplicas: 2
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: myapp-hpa
+      spec:
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: myapp-deployment
+        minReplicas: 2
+        maxReplicas: 5
+        metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 50
 
 
 Apply:
@@ -189,12 +189,12 @@ kubectl get hpa
 
 Start a load generator pod:
 
-kubectl run -it --rm load-generator --image=busybox -- sh
+    kubectl run -it --rm load-generator --image=busybox -- sh
 
 
 Inside:
 
-while true; do wget -q -O- http://myapp-service:5000; done
+    while true; do wget -q -O- http://myapp-service:5000; done
 
 
 Watch HPA respond:
