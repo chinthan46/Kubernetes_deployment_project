@@ -20,6 +20,7 @@ Accessing the app via NodePort / Minikube service
 
 
 🏗️ Project Architecture
+
                  +-----------------------------+
                  |         ConfigMap           |
                  |  (Environment Variables)    |
