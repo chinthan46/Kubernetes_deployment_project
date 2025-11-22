@@ -21,27 +21,32 @@ Accessing the app via NodePort / Minikube service
 
 🏗️ Project Architecture
 
+                
                  +-----------------------------+
                  |         ConfigMap           |
                  |  (Environment Variables)    |
                  +--------------+--------------+
                                 |
                                 v
-+--------------------+     +----+-----+
-|  User / Browser    | --> | Service  |  (NodePort - exposes app)
-+--------------------+     +----+-----+
-                                |
-                                v
-                       +--------+--------+
-                       |   Deployment     |
-                       | (Multiple Pods)  |
-                       +--------+---------+
-                                |
-                                v
-                        +-------+------+
-                        |  Dockerized   |
-                        |   Application |
-                        +--------------+
+          +--------------------+     +----+-----+
+         |  User / Browser    | --> | Service  |  (NodePort - exposes app)
+          +--------------------+     +----+-----+
+                                  |
+                                  
+                                  v
+                                  
+                         +--------+--------+
+                         |   Deployment     |
+                         | (Multiple Pods)  |
+                         +--------+---------+
+                                  |
+                                  v
+                                  
+                          +-------+------+
+                          |  Dockerized   |
+                          |   Application |
+                          +--------------+
+                          
 
 
 HPA monitors CPU usage of the Deployment and scales pods up/down automatically.
